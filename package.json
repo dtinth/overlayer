@@ -6,10 +6,12 @@
   "main": "main.js",
   "devDependencies": {
     "electron": "^6.0.10",
-    "electron-builder": "^21.2.0"
+    "electron-builder": "^21.2.0",
+    "prettier": "^1.18.2"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "cosmiconfig": "^5.2.1",
     "express": "^4.17.1"
   },
