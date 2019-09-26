@@ -1,0 +1,29 @@
+{
+  "name": "overlayer",
+  "description": "Screen overlay API",
+  "devDependencies": {
+    "electron": "^6.0.10",
+    "electron-builder": "^21.2.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cosmiconfig": "^5.2.1",
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "build": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "me.spacet.overlayer",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "files": [
+      "renderer.js",
+      "renderer.html",
+      "configuration.js",
+      "main.js"
+    ]
+  }
+}
