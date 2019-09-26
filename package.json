@@ -1,6 +1,9 @@
 {
   "name": "overlayer",
   "description": "Screen overlay API",
+  "author": "Thai Pangsakulyanont <dtinth@spacet.me> (http://dt.in.th/)",
+  "version": "1.0.0",
+  "main": "main.js",
   "devDependencies": {
     "electron": "^6.0.10",
     "electron-builder": "^21.2.0"
