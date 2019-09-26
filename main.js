@@ -3,26 +3,42 @@ const configuration = require('./configuration')
 const { app, BrowserWindow, globalShortcut } = require('electron')
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 let currentWindow
-function main () {
+function main() {
   currentWindow = createWindow()
 
   const app = express()
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
-  app.use('/overlayer/:key/:overlayId',async(req,res,next) => {
-    const win = currentWindow
+  app.use(cors())
+
+  const auth = (req, res, next) => {
     if (req.params.key !== configuration.key) {
       res.status(401).json('Unauthorized')
+      return
     }
-    win.webContents.send('display', {
-      overlayId: String(req.params.overlayId),
-      html: String(req.param('html')),
-    })
+    next()
+  }
+  app.use('/overlayer/:key/:overlayId', auth, (req, res, next) => {
+    const overlays = {}
+    const win = currentWindow
+    overlays[req.params.overlayId] = String(req.body.html || req.query.html)
+    win.webContents.send('display', { overlays })
     res.status(200).json('ok')
   })
-  app.listen(29292, '127.0.0.1', function (err) {
+  app.use('/overlayer/:key', auth, (req, res, next) => {
+    const win = currentWindow
+    const objectify = x => (typeof x !== 'object' || !x ? {} : x)
+    const overlays = {
+      ...(objectify(req.query.overlays) || {}),
+      ...(objectify(req.body.overlays) || {}),
+    }
+    win.webContents.send('display', { overlays })
+    res.status(200).json('ok')
+  })
+  app.listen(29292, '127.0.0.1', function(err) {
     if (err) {
       throw err
     }
@@ -50,7 +66,7 @@ function createWindow() {
     webPreferences: {
       preload: `${__dirname}/renderer.js`,
     },
-    ...electron.screen.getPrimaryDisplay().bounds
+    ...electron.screen.getPrimaryDisplay().bounds,
   })
   win.setIgnoreMouseEvents(true)
   win.setAlwaysOnTop(true, 'screen-saver')
@@ -59,7 +75,7 @@ function createWindow() {
   win.webContents.on('devtools-opened', () => {
     win.setIgnoreMouseEvents(false)
   })
-  return  win
+  return win
 }
 
 app.on('ready', main)
