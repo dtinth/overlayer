@@ -64,14 +64,14 @@ function createWindow() {
     maximizable: false,
     hasShadow: false,
     webPreferences: {
-      preload: `${__dirname}/renderer.js`,
+      preload: `${__dirname}/renderer/preload.js`,
     },
     ...electron.screen.getPrimaryDisplay().bounds,
   })
   win.setIgnoreMouseEvents(true)
   win.setAlwaysOnTop(true, 'screen-saver')
   Object.assign(global, { window: win })
-  win.loadFile('renderer.html')
+  win.loadFile('renderer/index.html')
   win.webContents.on('devtools-opened', () => {
     win.setIgnoreMouseEvents(false)
   })
