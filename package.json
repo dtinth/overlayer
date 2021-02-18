@@ -5,8 +5,8 @@
   "version": "1.0.0",
   "main": "main.js",
   "devDependencies": {
-    "electron": "^6.0.10",
-    "electron-builder": "^21.2.0",
+    "electron": "^11.2.3",
+    "electron-builder": "^22.9.1",
     "prettier": "^1.18.2"
   },
   "dependencies": {
@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "electron-builder --dir",
-    "dist": "electron-builder"
+    "start": "electron ."
   },
   "build": {
     "appId": "me.spacet.overlayer",
