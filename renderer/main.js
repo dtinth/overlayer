@@ -1,6 +1,6 @@
 Vue.config.productionTip = false
 
-const state = new Map()
+const state = (window.state = new Map())
 
 window.handleOverlaysReceived = overlays => {
   for (const [overlayId, payload] of Object.entries(overlays)) {
@@ -21,6 +21,7 @@ window.handleOverlaysReceived = overlays => {
       }
     }
   }
+  return state.size
 }
 
 function createOverlay(overlayId) {

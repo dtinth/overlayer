@@ -27,7 +27,8 @@
     "files": [
       "renderer",
       "configuration.js",
-      "main.js"
+      "main.js",
+      "build"
     ]
   }
 }

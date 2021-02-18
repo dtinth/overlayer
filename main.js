@@ -1,11 +1,33 @@
 const electron = require('electron')
 const configuration = require('./configuration')
-const { app, BrowserWindow, globalShortcut } = require('electron')
+const {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  ipcMain,
+  Tray,
+  Menu,
+} = require('electron')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
+// https://stackoverflow.com/questions/35916158/how-to-prevent-multiple-instances-in-electron
+if (!app.requestSingleInstanceLock()) {
+  app.quit()
+}
+app.whenReady().then(() => {
+  const tray = new Tray(require('path').join(__dirname, 'build/tray.png'))
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Quit', click: () => app.quit() },
+  ])
+  tray.setToolTip('Overlayer')
+  tray.setContextMenu(contextMenu)
+})
+
+/** @type {BrowserWindow | undefined} */
 let currentWindow
+
 function main() {
   currentWindow = createWindow()
 
@@ -53,6 +75,17 @@ function main() {
     currentWindow = createWindow()
     oldWindow.destroy()
   })
+  ipcMain.on('overlayCount', (event, c) => {
+    if (!currentWindow) return
+    const visible = currentWindow.isVisible()
+    if (c > 0 && !visible) {
+      currentWindow.show()
+      console.log('Show window')
+    } else if (c === 0 && visible) {
+      currentWindow.hide()
+      console.log('Hide window')
+    }
+  })
 }
 
 function createWindow() {
@@ -63,6 +96,7 @@ function createWindow() {
     minimizable: false,
     maximizable: false,
     hasShadow: false,
+    focusable: false,
     webPreferences: {
       preload: `${__dirname}/renderer/preload.js`,
     },
