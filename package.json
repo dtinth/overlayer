@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "main": "main.js",
   "devDependencies": {
-    "electron": "^11.2.3",
+    "electron": "^18.3.7",
     "electron-builder": "^22.9.1",
     "prettier": "^1.18.2"
   },
